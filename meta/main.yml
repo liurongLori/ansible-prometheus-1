@@ -1,0 +1,25 @@
+---
+galaxy_info:
+  author: Merritt Krakowitzer
+  description: Install prometheus monitoring components
+  license: MIT
+  platforms:
+    - name: Ubuntu
+      versions:
+        - precise
+        - trusty
+        - wily
+        - xenial
+    - name: EL
+      versions:
+        - 6
+        - 7
+  galaxy_tags:
+    - monitoring
+    - prometheus
+    - alertmanager
+    - system
+    - cloud
+  min_ansible_version: 2.1
+dependencies:
+  #- { role: dochang.docker }

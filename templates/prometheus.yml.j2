@@ -1,0 +1,15 @@
+global:
+  scrape_interval: {{ prometheus_scrape_interval }}
+  evaluation_interval: {{ prometheus_evaluation_interval }}
+{% if prometheus_external_labels is defined %}
+  external_labels:
+{% for key in prometheus_external_labels %}
+    {{ key }}: {{ prometheus_external_labels[key] }}
+{% endfor %}
+{% endif %}
+{% if default_alert_rules %}
+rule_files:
+{{ prometheus_rule_files | to_nice_yaml }}
+{% endif %}
+scrape_configs:
+{{ prometheus_scrape_configs | to_nice_yaml( width=50, explicit_start=False, explicit_end=False) }}

@@ -1,0 +1,12 @@
+---
+- name: restart prometheus
+  become: yes
+  command: docker restart prometheus
+
+- name: restart alertmanager
+  become: yes
+  command: docker restart alertmanager
+
+- name: restart blackbox_exporter
+  become: yes
+  command: docker restart blackbox_exporter

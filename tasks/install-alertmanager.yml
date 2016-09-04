@@ -1,0 +1,22 @@
+---
+- name: Create alertmanager container
+  docker_container:
+    name: alertmanager
+    command: -config.file=/alertmanager/alertmanager.yml
+    hostname: alertmanager.camelot.global
+    image: prom/alertmanager
+    volumes:
+      - "{{ path }}/alertmanager:/alertmanager"
+    published_ports:
+      - 9093:9093
+    restart_policy: always
+
+- name: copy prometheus config file
+  template: >
+    src=templates/alertmanager.yml.j2
+    dest="{{ path }}/alertmanager/alertmanager.yml"
+    owner=root
+    group=root
+    mode=0640
+  notify:
+    - "{{ alertmanager_restart_handler }}"
