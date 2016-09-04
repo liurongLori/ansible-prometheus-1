@@ -1,0 +1,21 @@
+---
+- name: install deps (Ubuntu)
+  apt: >
+    pkg={{item}}
+    state=installed
+  with_items:
+    - python-pip
+    - jq
+  when: ansible_os_family == "Debian"
+
+- name: install deps (RHEL)
+  yum: >
+    pkg={{item}}
+    state=installed
+  with_items:
+    - unzip
+    - jq
+    - python27-pip
+  when: ansible_os_family == "RedHat"
+
+- pip: name=docker-py

@@ -1,0 +1,8 @@
+---
+- hosts: all
+  roles:
+    - ansible-prometheus
+  vars:
+    install_prometheus: true
+    prometheus_external_labels: 
+      test: test

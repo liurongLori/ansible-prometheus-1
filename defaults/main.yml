@@ -1,0 +1,86 @@
+---
+path: /srv/
+prometheus_version: latest
+install_prometheus: true
+install_alertmanager: true
+install_blackbox_exporter: false
+install_node_exporter: false
+
+prometheus_restart_handler: restart prometheus
+alertmanager_restart_handler: restart alertmanager
+blackbox_exporter_restart_handler: restart blackbox_exporter
+
+prometheus_hostname: prometheus
+alertmanager_hostname: alertmanager
+blackbox_exporter_hostname: blackbox-exporter
+node_exporter_hostname: "{{ ansible_fqdn }}"
+
+# Lets prometheus know where to send alerts
+alertmanager_ip: "{{ ansible_default_ipv4.address }}"
+# Enable some default alerts. You should add your own custom ones.
+default_alert_rules: true
+
+# Prometheus configuration file
+prometheus_scrape_interval: 15s
+prometheus_evaluation_interval: 15s
+prometheus_external_labels: ''
+prometheus_rule_files:
+  - '/prometheus-data/alert.rules'
+# See https://prometheus.io/docs/operating/configuration/#<scrape_config>
+prometheus_scrape_configs:
+- job_name: 'prometheus'
+  scrape_interval: 10s
+  scrape_timeout:  10s
+  static_configs:
+    - targets: ['localhost:9090']
+- job_name: 'node_exporter'
+  scrape_interval: 5s
+  static_configs:
+    - targets:
+      - "{{ ansible_default_ipv4.address }}:9100"
+
+# Alertmanager configuration file
+alertmanager_route:
+  group_wait: 30s
+  group_interval: 2m
+  repeat_interval: 10m
+  receiver: webhook
+  routes:
+  - match:
+      severity: warning
+    receiver: webhook
+  - match:
+        severity: critical
+    receiver: webhook
+  group_by:
+  - cluster
+  - alertname
+  - host
+alertmanager_templates:
+- '/alertmanager/template/*.tmpl'
+alertmanager_inhibit_rules:
+- source_match:
+    severity: critical
+  target_match:
+    severity: warning
+  equal:
+  - alertname
+  - host
+alertmanager_receivers:
+- name: 'webhook'
+  webhook_configs:
+  - url: 'http://127.0.0.1:5001/'
+
+blackbox_exporter_modules:
+  http_2xx:
+    prober: http
+    timeout: 5s
+    http:
+      valid_status_codes: []
+      method: GET
+      headers:
+        Host: vhost.example.com
+        Accept-Language: en-US
+      no_follow_redirects: false
+      fail_if_ssl: false
+      fail_if_not_ssl: false

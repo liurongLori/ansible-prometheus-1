@@ -1,0 +1,6 @@
+---
+- include: install.yml
+- { include: install-prometheus.yml, when: install_prometheus == true }
+- { include: install-alertmanager.yml, when: install_alertmanager == true }
+- { include: install-blackbox_exporter.yml, when: install_blackbox_exporter == true }
+- { include: install-node_exporter.yml, when: install_node_exporter == true }
