@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: Merritt Krakowitzer
-  description: Install prometheus monitoring components
+  description: Install prometheus monitoring components as dockerized containers
   license: MIT
   platforms:
     - name: Ubuntu
