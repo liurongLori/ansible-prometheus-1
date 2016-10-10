@@ -137,7 +137,7 @@ These are the handlers that are defined in `handlers/main.yml`.
 
 ```
 $ bundle install
-$ bundle exec kitchen test
+$ KITCHEN\_YAML=".kitchen.vagrant.yml" bundle exec kitchen test
 ```
 
 ### Manual testing

@@ -1,0 +1,28 @@
+---
+driver:
+  name: vagrant
+
+provisioner:
+  name: ansible_playbook
+  ansible_verbose: true
+  ansible_verbosity: 5
+  log_level: debug
+  hosts: all
+  require_chef_for_busser: false
+  require_ruby_for_busser: true
+  roles_path: ../
+
+platforms:
+  - name: trusty64
+    driver_config:
+      box: williamyeh/ubuntu-trusty64-docker
+    verifier:
+      ruby_bindir: '/usr/bin'
+  - name: centos7
+    driver_config:
+      box: minimum/centos-7-docker
+    verifier:
+      ruby_bindir: '/usr/bin'
+
+suites:
+  - name: default
