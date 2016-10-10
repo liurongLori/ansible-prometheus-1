@@ -15,7 +15,7 @@
   with_items:
     - unzip
     - jq
-    - python27-pip
+    - python-pip
   when: ansible_os_family == "RedHat"
 
 - pip: name=docker-py

@@ -3,7 +3,7 @@
   docker_container:
     name: alertmanager
     command: -config.file=/alertmanager/alertmanager.yml
-    hostname: alertmanager.camelot.global
+    hostname: "{{ alertmanager_hostname }}"
     image: prom/alertmanager
     volumes:
       - "{{ path }}/alertmanager:/alertmanager"

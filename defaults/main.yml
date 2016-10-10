@@ -10,8 +10,8 @@ prometheus_restart_handler: restart prometheus
 alertmanager_restart_handler: restart alertmanager
 blackbox_exporter_restart_handler: restart blackbox_exporter
 
-prometheus_hostname: prometheus
-alertmanager_hostname: alertmanager
+prometheus_hostname: "{{ ansible_fqdn }}"
+alertmanager_hostname: "{{ ansible_fqdn }}"
 blackbox_exporter_hostname: blackbox-exporter
 node_exporter_hostname: "{{ ansible_fqdn }}"
 

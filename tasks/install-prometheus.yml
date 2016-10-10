@@ -3,7 +3,7 @@
   docker_container:
     name: prometheus
     command: -config.file=/prometheus-data/prometheus.yml -alertmanager.url=http://{{ alertmanager_ip }}:9093 -storage.local.path=/prometheus-data/data
-    hostname: prometheus.camelot.global
+    hostname: "{{ prometheus_hostname }}"
     image: prom/prometheus
     volumes:
       - "{{ path }}/prometheus-data:/prometheus-data"
