@@ -60,3 +60,5 @@ roles/*
 
 # Developing on OSX
 .DS_Store
+
+Gemfile.lock
