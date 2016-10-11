@@ -1,5 +1,7 @@
 # Ansible Prometheus docker role
 
+[![Build Status](https://travis-ci.org/mkrakowitzer/ansible-prometheus.svg?branch=master)](https://travis-ci.org/mkrakowitzer/ansible-prometheus)
+
 `prometheus` is an [ansible](http://www.ansible.com) role which:
 
  * installs and configures prometheus in a docker container
