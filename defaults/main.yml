@@ -24,6 +24,11 @@ default_alert_rules: true
 prometheus_scrape_interval: 15s
 prometheus_evaluation_interval: 15s
 prometheus_external_labels: ''
+prometheus_commandline_args:
+  config.file: "/prometheus-data/prometheus.yml"
+  alertmanager.url: "http://{{ alertmanager_ip }}:9093"
+  storage.local.path: "/prometheus-data/data"
+
 prometheus_rule_files:
   - '/prometheus-data/alert.rules'
 # See https://prometheus.io/docs/operating/configuration/#<scrape_config>

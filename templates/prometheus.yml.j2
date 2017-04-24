@@ -9,7 +9,7 @@ global:
 {% endif %}
 {% if default_alert_rules %}
 rule_files:
-{{ prometheus_rule_files | to_nice_yaml }}
+{{ prometheus_rule_files | to_json | from_json | to_nice_yaml }}
 {% endif %}
 scrape_configs:
-{{ prometheus_scrape_configs | to_nice_yaml( width=50, explicit_start=False, explicit_end=False) }}
+{{ prometheus_scrape_configs | to_json | from_json | to_nice_yaml( width=50, explicit_start=False, explicit_end=False) }}

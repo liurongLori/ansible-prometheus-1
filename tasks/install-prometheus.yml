@@ -2,7 +2,7 @@
 - name: Create prometheus container
   docker_container:
     name: prometheus
-    command: -config.file=/prometheus-data/prometheus.yml -alertmanager.url=http://{{ alertmanager_ip }}:9093 -storage.local.path=/prometheus-data/data
+    command: "{% for key in prometheus_commandline_args %}-{{key}}={{prometheus_commandline_args[key]}} {% endfor %}"
     hostname: "{{ prometheus_hostname }}"
     image: prom/prometheus
     volumes:
