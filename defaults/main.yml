@@ -26,7 +26,7 @@ prometheus_evaluation_interval: 15s
 prometheus_external_labels: ''
 prometheus_commandline_args:
   config.file: "/prometheus-data/prometheus.yml"
-  storage.local.path: "/prometheus-data/data"
+  storage.tsdb.path: "/prometheus-data/data"
 
 prometheus_rule_files:
   - '/prometheus-data/alert.rules'
