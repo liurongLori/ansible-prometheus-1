@@ -26,7 +26,6 @@ prometheus_evaluation_interval: 15s
 prometheus_external_labels: ''
 prometheus_commandline_args:
   config.file: "/prometheus-data/prometheus.yml"
-  alertmanager.url: "http://{{ alertmanager_ip }}:9093"
   storage.local.path: "/prometheus-data/data"
 
 prometheus_rule_files:
@@ -43,6 +42,13 @@ prometheus_scrape_configs:
   static_configs:
     - targets:
       - "{{ ansible_default_ipv4.address }}:9100"
+
+prometheus_alerting:
+  alertmanagers:
+  - scheme: http
+    static_configs:
+    - targets:
+      - "{{ alertmanager_ip }}:9093"
 
 # Alertmanager configuration file
 alertmanager_route:
