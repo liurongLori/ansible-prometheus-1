@@ -11,12 +11,20 @@
       - 9090:9090
     restart_policy: always
 
+- name: ensure prometheus data directory owner is nobody
+  file: >
+    path="{{ path }}/prometheus-data"
+    owner=nobody
+    group=nogroup
+    mode=0740
+    state=directory
+
 - name: copy prometheus config file
   template: >
     src=templates/prometheus.yml.j2
     dest="{{ path }}/prometheus-data/prometheus.yml"
     owner=root
-    group=root
+    group=nogroup
     mode=0640
   notify:
     - "{{ prometheus_restart_handler }}"
@@ -26,7 +34,7 @@
     src=files/alert.rules
     dest="{{ path }}/prometheus-data/alert.rules"
     owner=root
-    group=root
+    group=nogroup
     mode=0640
   notify:
     - "{{ prometheus_restart_handler }}"
