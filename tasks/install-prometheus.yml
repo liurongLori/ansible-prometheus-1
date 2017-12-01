@@ -41,7 +41,7 @@
   when: default_alert_rules == true
 
 - name: copy prometheus rules
-  copy: >
+  template: >
     src="{{ item }}"
     dest="{{ path }}/prometheus-data/{{ item | basename }}.rules"
     owner=root
