@@ -26,11 +26,18 @@ prometheus_evaluation_interval: 15s
 prometheus_external_labels: ''
 prometheus_commandline_args:
   config.file: "/prometheus-data/prometheus.yml"
-  alertmanager.url: "http://{{ alertmanager_ip }}:9093"
-  storage.local.path: "/prometheus-data/data"
+  storage.tsdb.path: "/prometheus-data/data"
+prometheus_image: "prom/prometheus"
 
-prometheus_rule_files:
-  - '/prometheus-data/alert.rules'
+# Fileglobs loop format
+# http://docs.ansible.com/ansible/latest/playbooks_loops.html#id4
+prometheus_rule_files: []
+
+# Telegraf rules
+prometheus_telegraf_rules_config: {}
+#  receiver: slack
+
+
 # See https://prometheus.io/docs/operating/configuration/#<scrape_config>
 prometheus_scrape_configs:
 - job_name: 'prometheus'
@@ -43,6 +50,13 @@ prometheus_scrape_configs:
   static_configs:
     - targets:
       - "{{ ansible_default_ipv4.address }}:9100"
+
+prometheus_alerting:
+  alertmanagers:
+  - scheme: http
+    static_configs:
+    - targets:
+      - "{{ alertmanager_ip }}:9093"
 
 # Alertmanager configuration file
 alertmanager_route:

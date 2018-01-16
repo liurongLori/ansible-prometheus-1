@@ -1,44 +1,52 @@
-ALERT InstanceDown
-  IF up == 0
-  FOR 2m
-  LABELS { severity = "critical" }
-  ANNOTATIONS {
-    summary = "Instance {{ $labels.instance }} down",
-    description = "{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 5 minutes.",
-  }
+groups:
+- name: alert.rules
+  rules:
+  - alert: HighMem
+    expr: 100 - (node_memory_MemFree + node_memory_Buffers + node_memory_Cached) /
+      node_memory_MemTotal * 100 > 90
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      description: '{{$labels.host}} of job {{$labels.job}} has less than 40% of memory
+        available for more than 1 minutes.'
+      summary: Instance {{$labels.host}} has high memory consumption
+  - alert: HighLoad
+    expr: node_load1 > 4
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      description: '{{$labels.host}} of job {{$labels.job}} has high load  for more
+        than 1 minutes.'
+      summary: Instance {{$labels.host}} {{$labels.instance}} has high load
+  - alert: HighCPU
+    expr: sum(irate(node_cpu{mode="user"}[5m])) BY (host, mode) * 100 / scalar(count(count(node_cpu)
+      BY (cpu))) > 50
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      description: '{{$labels.host}} of job {{$labels.job}} has been consuming > 50%
+        cpi for more than 1 minutes.'
+      summary: Instance {{$labels.host}} {{$labels.instance}} has high cpu
+  - alert: LowDiskSpace
+    expr: 100 - node_filesystem_free{job="node_exporter"} / node_filesystem_size{job="node_exporter"}
+      * 100 > 80
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      description: disk space on {{$labels.host}} {{$labels.instance}} lower than
+        20%
+      summary: disk space on {{$labels.host}} {{$labels.instance}} lower than 20%
+  - alert: InstanceDown
+    expr: up == 0
+    for: 2m
+    labels:
+      severity: critical
+    annotations:
+      description: '{{ $labels.instance }} of job {{ $labels.job }} has been down
+        for more than 5 minutes.'
+      summary: Instance {{ $labels.instance }} down
 
-ALERT HighMem
-  IF 100 -(node_memory_MemFree + node_memory_Buffers + node_memory_Cached) / node_memory_MemTotal* 100 > 90
-  FOR 2m
-  LABELS { severity = "warning" }
-  ANNOTATIONS {
-    summary = "Instance {{$labels.host}} has high memory consumption",
-    description = "{{$labels.host}} of job {{$labels.job}} has less than 40% of memory available for more than 1 minutes.",
-  }
-
-ALERT HighLoad
-  IF node_load1 > 4
-  FOR 2m
-  LABELS { severity = "warning" }
-  ANNOTATIONS {
-    summary = "Instance {{$labels.host}} {{$labels.instance}} has high load",
-    description = "{{$labels.host}} of job {{$labels.job}} has high load  for more than 1 minutes.",
-  }
-
-ALERT HighCPU
-  IF sum by (host,mode)(irate(node_cpu{mode='user'}[5m])) * 100 / scalar(count(count by (cpu)(node_cpu))) > 50
-  FOR 2m
-  LABELS { severity = "warning" }
-  ANNOTATIONS {
-    summary = "Instance {{$labels.host}} {{$labels.instance}} has high cpu",
-    description = "{{$labels.host}} of job {{$labels.job}} has been consuming > 50% cpi for more than 1 minutes.",
-  }
-
-ALERT LowDiskSpace
-  IF 100 - node_filesystem_free{job="node_exporter"} / node_filesystem_size{job="node_exporter"} * 100 > 80
-  FOR 2m
-  LABELS { severity = "warning" }
-  ANNOTATIONS {
-    summary = "disk space on {{$labels.host}} {{$labels.instance}} lower than 20%",
-    description = "disk space on {{$labels.host}} {{$labels.instance}} lower than 20%",
-  }
